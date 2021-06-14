@@ -13,6 +13,13 @@ go
 
 if exists (select 1
             from  sysobjects
+           where  id = object_id('ENTRENAMIENTO')
+            and   type = 'U')
+   drop table ENTRENAMIENTO
+go
+
+if exists (select 1
+            from  sysobjects
            where  id = object_id('ASCENSO')
             and   type = 'U')
    drop table ASCENSO
@@ -27,9 +34,9 @@ go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('MISIONES')
+           where  id = object_id('MISION')
             and   type = 'U')
-   drop table MISIONES
+   drop table MISION
 go
 
 if exists (select 1
@@ -48,16 +55,16 @@ go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('BAJAS')
+           where  id = object_id('BAJA')
             and   type = 'U')
-   drop table BAJAS
+   drop table BAJA
 go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('SANCIONES')
+           where  id = object_id('SANCION')
             and   type = 'U')
-   drop table SANCIONES
+   drop table SANCION
 go
 
 if exists (select 1
@@ -69,9 +76,9 @@ go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('UNIDADES')
+           where  id = object_id('UNIDAD')
             and   type = 'U')
-   drop table UNIDADES
+   drop table UNIDAD
 go
 
 
@@ -141,44 +148,43 @@ insert into CASTIGO( ID_CASTIGO,ID_RANGO,NUMERO_CASTIGOS,FECHA_CASTIGO,AÑO_CASTI
 /*==============================================================*/
 /* Table: MISIONES                                              */
 /*==============================================================*/
-create table MISIONES (
-   ID_MISIONES          int                  not null,
+create table MISION (
+   ID_MISION          int                  not null,
    ID_POLICIA           int                  null,
    NOVEDADES            varchar(50)          not null,
    BAJAS_POLICIA        varchar(30)          not null,
    BAJAS_DELINCUENTES   varchar(30)          not null,
-   NUMERO_BAJAS_P       varchar(10)          not null,
-   NUMERO_BAJAS_D       varchar(10)          not null,
    FECHA_MISION         date             not null,
    NUMEROS_NOVEDADES    varchar(10)      not null,
-   constraint PK_MISIONES primary key nonclustered (ID_MISIONES)
+   constraint PK_MISIONES primary key nonclustered (ID_MISION)
 )
 go
 
 /*Datos Insertados de la tabla MISIONES*/
 
-insert into MISIONES(ID_MISIONES,ID_POLICIA,NOVEDADES,BAJAS_POLICIA,BAJAS_DELINCUENTES,NUMERO_BAJAS_P,NUMERO_BAJAS_D,FECHA_MISION,NUMEROS_NOVEDADES) 
-            values(1,1,'Asalto','si','si','3','8','17/08/2019','3');
-insert into MISIONES(ID_MISIONES,ID_POLICIA,NOVEDADES,BAJAS_POLICIA,BAJAS_DELINCUENTES,NUMERO_BAJAS_P,NUMERO_BAJAS_D,FECHA_MISION,NUMEROS_NOVEDADES) 
-            values(2,2,'Manuntencion','no','si','0','2','25/10/2019','5');
-insert into MISIONES(ID_MISIONES,ID_POLICIA,NOVEDADES,BAJAS_POLICIA,BAJAS_DELINCUENTES,NUMERO_BAJAS_P,NUMERO_BAJAS_D,FECHA_MISION,NUMEROS_NOVEDADES) 
-            values(3,3,'Retencion Motos','no','no','0','0','10/04/2020','2');
+insert into MISION(ID_MISION,ID_POLICIA,NOVEDADES,BAJAS_POLICIA,BAJAS_DELINCUENTES,FECHA_MISION,NUMEROS_NOVEDADES) 
+            values(1,1,'Asalto','si','si','17/08/2019','3');
+insert into MISION(ID_MISION,ID_POLICIA,NOVEDADES,BAJAS_POLICIA,BAJAS_DELINCUENTES,FECHA_MISION,NUMEROS_NOVEDADES) 
+            values(2,2,'Manuntencion','no','si','25/10/2019','5');
+insert into MISION(ID_MISION,ID_POLICIA,NOVEDADES,BAJAS_POLICIA,BAJAS_DELINCUENTES,FECHA_MISION,NUMEROS_NOVEDADES) 
+            values(3,3,'Retencion Motos','no','no','10/04/2020','2');
 
 /*==============================================================*/
 /* Table: Bajas                                             */
 /*==============================================================*/
-create table BAJAS (
-   ID_BAJAS          int                  not null,
-   ID_MISIONES          int                  null,
+create table BAJA (
+   ID_BAJA          int                  not null,
+   ID_MISION          int                  null,
    NUMERO_BAJAS_P       varchar(10)          not null,
    NUMERO_BAJAS_D       varchar(10)          not null,
-   constraint PK_BAJAS primary key nonclustered (ID_BAJAS)
+   constraint PK_BAJAS primary key nonclustered (ID_BAJA)
 )
 go
 
-insert into BAJAS(ID_BAJAS,ID_MISIONES,NUMERO_BAJAS_P,NUMERO_BAJAS_D) values (1,1,'3','6');
-insert into BAJAS(ID_BAJAS,ID_MISIONES,NUMERO_BAJAS_P,NUMERO_BAJAS_D) values (2,2,'3','1');
-insert into BAJAS(ID_BAJAS,ID_MISIONES,NUMERO_BAJAS_P,NUMERO_BAJAS_D) values (3,3,'0','0');
+/*Datos Insertados de la tabla BAJAS*/
+insert into BAJA(ID_BAJA,ID_MISION,NUMERO_BAJAS_P,NUMERO_BAJAS_D) values (1,1,'3','6');
+insert into BAJA(ID_BAJA,ID_MISION,NUMERO_BAJAS_P,NUMERO_BAJAS_D) values (2,2,'0','1');
+insert into BAJA(ID_BAJA,ID_MISION,NUMERO_BAJAS_P,NUMERO_BAJAS_D) values (3,3,'0','0');
 
 
 
@@ -188,7 +194,7 @@ insert into BAJAS(ID_BAJAS,ID_MISIONES,NUMERO_BAJAS_P,NUMERO_BAJAS_D) values (3,
 create table POLICIA (
    ID_POLICIA           int                  not null,
    ID_RANGO             int                  null,
-   ID_UNIDADES          int                  null,
+   ID_UNIDAD          int                  null,
    ID_ARMA              int                  null,
    NOMBRES              varchar(50)          not null,
    APELLIDOS            varchar(50)          not null,
@@ -198,15 +204,16 @@ create table POLICIA (
    constraint PK_POLICIA primary key nonclustered (ID_POLICIA)
 )
 go
+
 /*Datos Insertados de la tabla POLICIA*/
 
-insert into POLICIA(ID_POLICIA,ID_RANGO,ID_UNIDADES,ID_ARMA,NOMBRES,APELLIDOS,FECHA_NACIMIENTO,FECHA_INGRESO,TIPO_CARGO)
+insert into POLICIA(ID_POLICIA,ID_RANGO,ID_UNIDAD,ID_ARMA,NOMBRES,APELLIDOS,FECHA_NACIMIENTO,FECHA_INGRESO,TIPO_CARGO)
             values(1,1,1,1,'Jose Antonio','Lucas Delgado','05/05/1992','10/06/2014','Generales');
-insert into POLICIA(ID_POLICIA,ID_RANGO,ID_UNIDADES,ID_ARMA,NOMBRES,APELLIDOS,FECHA_NACIMIENTO,FECHA_INGRESO,TIPO_CARGO)
+insert into POLICIA(ID_POLICIA,ID_RANGO,ID_UNIDAD,ID_ARMA,NOMBRES,APELLIDOS,FECHA_NACIMIENTO,FECHA_INGRESO,TIPO_CARGO)
             values(2,2,2,2,'Luis Franco','Mero Anchundia','15/08/1989','20/04/2013','Superiores');
-insert into POLICIA(ID_POLICIA,ID_RANGO,ID_UNIDADES,ID_ARMA,NOMBRES,APELLIDOS,FECHA_NACIMIENTO,FECHA_INGRESO,TIPO_CARGO)
+insert into POLICIA(ID_POLICIA,ID_RANGO,ID_UNIDAD,ID_ARMA,NOMBRES,APELLIDOS,FECHA_NACIMIENTO,FECHA_INGRESO,TIPO_CARGO)
             values(3,3,3,3,'Pedro Luis','Mero Mero','30/12/1985','20/10/2012','Subalternos');
-insert into POLICIA(ID_POLICIA,ID_RANGO,ID_UNIDADES,ID_ARMA,NOMBRES,APELLIDOS,FECHA_NACIMIENTO,FECHA_INGRESO,TIPO_CARGO)
+insert into POLICIA(ID_POLICIA,ID_RANGO,ID_UNIDAD,ID_ARMA,NOMBRES,APELLIDOS,FECHA_NACIMIENTO,FECHA_INGRESO,TIPO_CARGO)
             values(4,4,4,3,'Jose Luis','Mero Mero','10/18/1990','20/10/2016','Superiores');
 /*==============================================================*/
 /* Table: RANGO                                                 */
@@ -230,20 +237,20 @@ insert into RANGO(ID_RANGO,ANTECEDE,ANO_NECESITA)values (4,'General Inspector','
 /*==============================================================*/
 /* Table: SANCIONES                                             */
 /*==============================================================*/
-create table SANCIONES (
-   ID_SANCIONES         int                  not null,
+create table SANCION (
+   ID_SANCION         int                  not null,
    ID_POLICIA           int                  null,
    TIPO_SANCION         varchar(20)          not null,
    FECHA_SANCION        date             not null,
-   constraint PK_SANCIONES primary key nonclustered (ID_SANCIONES)
+   constraint PK_SANCIONES primary key nonclustered (ID_SANCION)
 )
 go
 
 /*Datos Insertados de la tabla SANCIONES*/
 
-insert into SANCIONES(ID_SANCIONES,ID_POLICIA,TIPO_SANCION,FECHA_SANCION) values(1,1,'leve','17/10/2018');
-insert into SANCIONES(ID_SANCIONES,ID_POLICIA,TIPO_SANCION,FECHA_SANCION) values(2,2,'muy grvae','05/08/2019');
-insert into SANCIONES(ID_SANCIONES,ID_POLICIA,TIPO_SANCION,FECHA_SANCION) values(3,3,'grave','05/10/2020');
+insert into SANCION(ID_SANCION,ID_POLICIA,TIPO_SANCION,FECHA_SANCION) values(1,1,'leve','17/10/2018');
+insert into SANCION(ID_SANCION,ID_POLICIA,TIPO_SANCION,FECHA_SANCION) values(2,2,'muy grave','05/08/2019');
+insert into SANCION(ID_SANCION,ID_POLICIA,TIPO_SANCION,FECHA_SANCION) values(3,3,'grave','05/10/2020');
 
 /*==============================================================*/
 /* Table: SERVICIO                                              */
@@ -269,20 +276,46 @@ insert into SERVICIO(ID_SERVICIO,ID_POLICIA,ACTIVO,PUNTAJE_MINIMO,ANO_PERMANENCI
 /*==============================================================*/
 /* Table: UNIDADES                                              */
 /*==============================================================*/
-create table UNIDADES (
-   ID_UNIDADES          int                  not null,
+create table UNIDAD (
+   ID_UNIDAD          int                  not null,
    UNIDAD_ASIGNADA      varchar(50)          not null,
    FECHA_ASIGNADO       date             not null,
-   constraint PK_UNIDADES primary key nonclustered (ID_UNIDADES)
+   constraint PK_UNIDADES primary key nonclustered (ID_UNIDAD)
 )
 go
 
 /*Datos Insertados de la tabla UNIDADES*/
 
-insert into UNIDADES(ID_UNIDADES,UNIDAD_ASIGNADA,FECHA_ASIGNADO) values (1,'los olivos','17/05/2018');
-insert into UNIDADES(ID_UNIDADES,UNIDAD_ASIGNADA,FECHA_ASIGNADO) values (2,'los esteros','07/08/2018');
-insert into UNIDADES(ID_UNIDADES,UNIDAD_ASIGNADA,FECHA_ASIGNADO) values (3,'las orquideas','20/12/2018');
-insert into UNIDADES(ID_UNIDADES,UNIDAD_ASIGNADA,FECHA_ASIGNADO) values (4,'los ferretos','20/12/2018');
+insert into UNIDAD(ID_UNIDAD,UNIDAD_ASIGNADA,FECHA_ASIGNADO) values (1,'los olivos','17/05/2018');
+insert into UNIDAD(ID_UNIDAD,UNIDAD_ASIGNADA,FECHA_ASIGNADO) values (2,'los esteros','07/08/2018');
+insert into UNIDAD(ID_UNIDAD,UNIDAD_ASIGNADA,FECHA_ASIGNADO) values (3,'las orquideas','20/12/2018');
+insert into UNIDAD(ID_UNIDAD,UNIDAD_ASIGNADA,FECHA_ASIGNADO) values (4,'los ferretos','20/12/2018');
+
+/*==============================================================*/
+/* Table: ENTRENAMIENTO                                         */
+/*==============================================================*/
+create table ENTRENAMIENTO (
+    ID_ENTRENAMIENTO     int          not null,
+	ID_POLICIA           int          null,
+	ID_SANCION           int          null,
+	DIA_ENTRENAMIENTO    varchar(10)  not null,
+	HORA_INICIO          varchar(10)         not null,  
+	HORA_FIN             varchar(10)         not null,
+	FECHA_INICIO         varchar(10)  not null,
+	FECHA_FIN            date         not null,
+	constraint PK_ENTRENAMIENTO primary key nonclustered (ID_ENTRENAMIENTO)
+)
+go
+
+/*Datos Insertados de la tabla ENTRENAMIENTO*/
+
+insert into ENTRENAMIENTO(ID_ENTRENAMIENTO, ID_POLICIA, ID_SANCION, DIA_ENTRENAMIENTO, HORA_INICIO, HORA_FIN, FECHA_INICIO, FECHA_FIN) 
+            values (1, 1, 1, 'LUNES', '7:00 a.m', '9:00 a.m', '20/02/2014', '24/05/2014');
+insert into ENTRENAMIENTO(ID_ENTRENAMIENTO, ID_POLICIA, ID_SANCION, DIA_ENTRENAMIENTO, HORA_INICIO, HORA_FIN, FECHA_INICIO, FECHA_FIN) 
+            values (2, 2, 2, 'MARTES', '7:00 a.m', '9:00 a.m', '11/01/2013', '15/03/2013');
+insert into ENTRENAMIENTO(ID_ENTRENAMIENTO, ID_POLICIA, ID_SANCION, DIA_ENTRENAMIENTO, HORA_INICIO, HORA_FIN, FECHA_INICIO, FECHA_FIN) 
+            values (3, 3, 3, 'JUEVES', '7:00 a.m', '9:00 a.m', '25/07/2012', '29/09/2012');
+
 
 
 alter table ASCENSO
@@ -290,9 +323,9 @@ alter table ASCENSO
       references POLICIA (ID_POLICIA)
 go
 
-alter table BAJAS
-   add constraint FK_BAJAS_MISIONES__MISIONES foreign key (ID_MISIONES)
-      references MISIONES (ID_MISIONES)
+alter table BAJA
+   add constraint FK_BAJA_MISION__MISION foreign key (ID_MISION)
+      references MISION (ID_MISION)
 go
 
 alter table CASTIGO
@@ -300,8 +333,8 @@ alter table CASTIGO
       references RANGO (ID_RANGO)
 go
 
-alter table MISIONES
-   add constraint FK_MISIONES_POLICIA_M_POLICIA foreign key (ID_POLICIA)
+alter table MISION
+   add constraint FK_MISION_POLICIA_M_POLICIA foreign key (ID_POLICIA)
       references POLICIA (ID_POLICIA)
 go
 
@@ -316,17 +349,13 @@ alter table POLICIA
 go
 
 alter table POLICIA
-   add constraint FK_POLICIA_UNIDADES__UNIDADES foreign key (ID_UNIDADES)
-      references UNIDADES (ID_UNIDADES)
+   add constraint FK_POLICIA_UNIDAD__UNIDAD foreign key (ID_UNIDAD)
+      references UNIDAD (ID_UNIDAD)
 go
 
-alter table SANCIONES
-   add constraint FK_SANCIONE_ASCENSO_S_ASCENSO foreign key (ID_ASCENSO)
-      references ASCENSO (ID_ASCENSO)
-go
 
-alter table SANCIONES
-   add constraint FK_SANCIONE_POLICIA_S_POLICIA foreign key (ID_POLICIA)
+alter table SANCION
+   add constraint FK_SANCION_POLICIA_S_POLICIA foreign key (ID_POLICIA)
       references POLICIA (ID_POLICIA)
 go
 
@@ -367,33 +396,38 @@ select
 select 
        POLICIA.NOMBRES,
 	   POLICIA.APELLIDOS,
-	   MISIONES.NOVEDADES,
-	   MISIONES.FECHA_MISION,
-	   MISIONES.NUMEROS_NOVEDADES
-	   from MISIONES inner join POLICIA
-	   on MISIONES.ID_MISIONES = POLICIA.ID_POLICIA
+	   MISION.NOVEDADES,
+	   MISION.FECHA_MISION,
+	   MISION.NUMEROS_NOVEDADES
+	   from MISION inner join POLICIA
+	   on MISION.ID_MISION = POLICIA.ID_POLICIA
 	   order by NOVEDADES,
 	            NOMBRES,
 				FECHA_MISION,
 				NUMEROS_NOVEDADES,
 				APELLIDOS;
 			
-/*El numero de bajas en cada mision ejemplo: Asalto*/
+/*El numero de bajas de cada mision*/
 
 select 
-      MISIONES.NOVEDADES,
-      MISIONES.BAJAS_POLICIA,
-	  MISIONES.BAJAS_DELINCUENTES,
-	  MISIONES.FECHA_MISION,
-	  BAJAS.NUMERO_BAJAS_P,
-	  BAJAS.NUMERO_BAJAS_D
-from MISIONES inner join BAJAS
-on MISIONES.ID_MISIONES = BAJAS.ID_BAJAS
-where  NOVEDADES = 'Asalto'
+      MISION.NOVEDADES,
+      MISION.BAJAS_POLICIA,
+	  MISION.BAJAS_DELINCUENTES,
+	  MISION.FECHA_MISION,
+	  BAJA.NUMERO_BAJAS_P,
+	  BAJA.NUMERO_BAJAS_D,
+	  MISION.NUMEROS_NOVEDADES
+from MISION inner join BAJA
+on MISION.ID_MISION = BAJA.ID_BAJA
+where  NOVEDADES = MISION.NOVEDADES
 order by BAJAS_POLICIA,
          BAJAS_DELINCUENTES,
 		 NUMERO_BAJAS_D,
 		 NUMERO_BAJAS_P,
-		 FECHA_MISION;
+		 FECHA_MISION,
+		 MISION.NOVEDADES,
+		 NUMEROS_NOVEDADES;
 		 
-	
+      
+
+
