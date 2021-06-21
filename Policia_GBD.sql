@@ -359,7 +359,7 @@ alter table SANCION
       references POLICIA (ID_POLICIA)
 go
 
-/*1: Indique el numero de hermanos que hay en la base de datos */
+/*1: Indique los hermanos que hay en la base de datos */
 
 select
       POLICIA.NOMBRES,
@@ -407,7 +407,7 @@ select
 				NUMEROS_NOVEDADES,
 				APELLIDOS;
 			
-/*El numero de bajas de cada mision*/
+/*4: Mostrar el numero de bajas que se dan en cada mision*/
 
 select 
       MISION.NOVEDADES,
