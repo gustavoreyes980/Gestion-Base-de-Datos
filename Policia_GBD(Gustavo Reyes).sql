@@ -138,10 +138,9 @@ go
 
 /*Datos Insertados de la tabla CASTIGO*/
 insert into CASTIGO( ID_CASTIGO,ID_RANGO,NUMERO_CASTIGOS,FECHA_CASTIGO,AÑO_CASTIGO) values (1,1,'2','17/08/2014','2014');
-insert into CASTIGO( ID_CASTIGO,ID_RANGO,NUMERO_CASTIGOS,FECHA_CASTIGO,AÑO_CASTIGO) values (2,2,'1','06/06/2017','2017');
+insert into CASTIGO( ID_CASTIGO,ID_RANGO,NUMERO_CASTIGOS,FECHA_CASTIGO,AÑO_CASTIGO) values (2,2,'5','06/08/2017','2017');
 insert into CASTIGO( ID_CASTIGO,ID_RANGO,NUMERO_CASTIGOS,FECHA_CASTIGO,AÑO_CASTIGO) values (3,3,'3','20/05/2018','2018');
 insert into CASTIGO( ID_CASTIGO,ID_RANGO,NUMERO_CASTIGOS,FECHA_CASTIGO,AÑO_CASTIGO) values (4,4,'3','17/11/2016','2016');
-insert into CASTIGO( ID_CASTIGO,ID_RANGO,NUMERO_CASTIGOS,FECHA_CASTIGO,AÑO_CASTIGO) values (5,2,'5','06/08/2017','2017');
 
 
 
@@ -368,8 +367,9 @@ select
 	  from POLICIA INNER JOIN RANGO
 	  ON POLICIA.ID_POLICIA = RANGO.ID_RANGO
 	  WHERE POLICIA.APELLIDOS='Mero Mero'
+	  GROUP BY NOMBRES, APELLIDOS,ANTECEDE
+	  order by APELLIDOS;
 	  
-	  order by NOMBRES;
 	  
 	  
 /*2: Por cada uno de los rangos policiales que me indique un promedio castigo emitido al año*/
@@ -377,26 +377,24 @@ select
 select 
       RANGO.ANTECEDE,
       CASTIGO.FECHA_CASTIGO, 
-	  NUMERO_CASTIGOS,
-	  AÑO_CASTIGO
-	  from CASTIGO,RANGO
-	  
-	  where RANGO.ANTECEDE= 'Teniente' and AÑO_CASTIGO= '2017'
-	        or ANTECEDE = 'General Superior' and AÑO_CASTIGO ='2018'
-	        or ANTECEDE = 'Capitan Policia'and AÑO_CASTIGO= '2014'
-	        or ANTECEDE = 'General Inspector' and AÑO_CASTIGO = '2016'
+	  CASTIGO.NUMERO_CASTIGOS as PROMEDIO,
+	  CASTIGO.AÑO_CASTIGO
+	  from RANGO inner join CASTIGO 
+	  on  RANGO.ID_RANGO = CASTIGO.ID_CASTIGO
+	  where RANGO.ANTECEDE= ANTECEDE and  CASTIGO.NUMERO_CASTIGOS= NUMERO_CASTIGOS
 	  group by ANTECEDE,NUMERO_CASTIGOS,
 	           FECHA_CASTIGO,
 			   ID_CASTIGO,
 			   AÑO_CASTIGO		   
-	  order by FECHA_CASTIGO;
+	  order by FECHA_CASTIGO ;
 
-/*3: Que muestre las novedades que se hallan en las misiones*/
+
+/*3: Que muestre el numero de novedades que se hallan en las misiones*/
  
 select 
        POLICIA.NOMBRES,
 	   POLICIA.APELLIDOS,
-	   MISION.NOVEDADES,
+	   MISION.NOVEDADES as MISIONES,
 	   MISION.FECHA_MISION,
 	   MISION.NUMEROS_NOVEDADES
 	   from MISION inner join POLICIA
