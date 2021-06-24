@@ -372,12 +372,12 @@ select
 	  
 	  
 	  
-/*2: Por cada uno de los rangos policiales que me indique un promedio castigo emitido al año*/
+/*2: Por cada uno de los rangos policiales que me indique un promedio de castigos emitidos al año*/
 
 select 
       RANGO.ANTECEDE,
       CASTIGO.FECHA_CASTIGO, 
-	  CASTIGO.NUMERO_CASTIGOS as PROMEDIO,
+	  CASTIGO.NUMERO_CASTIGOS as PROMEDIO_CASTIGOS,
 	  CASTIGO.AÑO_CASTIGO
 	  from RANGO inner join CASTIGO 
 	  on  RANGO.ID_RANGO = CASTIGO.ID_CASTIGO
@@ -408,7 +408,7 @@ select
 /*4: Mostrar el numero de bajas que se dan en cada mision*/
 
 select 
-      MISION.NOVEDADES,
+      MISION.NOVEDADES as MISIONES,
       MISION.BAJAS_POLICIA,
 	  MISION.BAJAS_DELINCUENTES,
 	  MISION.FECHA_MISION,
